@@ -32,7 +32,7 @@ const Layout = () => {
                 options={{
                     tabBarLabel: 'Inbox', 
                     tabBarIcon: ({color, size}) => <MaterialCommunityIcons name="message-outline" color={color} size={size}/>}}/>
-            <Tabs.Screen 
+            <Tabs.Screen
                 name="profile"
                 options={{
                     tabBarLabel: 'Profile', 
