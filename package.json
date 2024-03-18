@@ -13,6 +13,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@clerk/clerk-expo": "^0.20.10",
     "@expo/vector-icons": "^14.0.0",
     "@react-navigation/native": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
@@ -20,9 +21,13 @@
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.1.0",
     "expo": "~50.0.13",
+    "expo-application": "~5.8.3",
+    "expo-auth-session": "~5.4.0",
+    "expo-crypto": "~12.8.1",
     "expo-font": "~11.10.3",
     "expo-linking": "~6.2.2",
     "expo-router": "~3.4.8",
+    "expo-secure-store": "~12.8.1",
     "expo-splash-screen": "~0.26.4",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.3",
