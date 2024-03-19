@@ -20,7 +20,7 @@
     "@typescript-eslint/parser": "^5.0.1",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.1.0",
-    "expo": "~50.0.13",
+    "expo": "^50.0.0",
     "expo-application": "~5.8.3",
     "expo-auth-session": "~5.4.0",
     "expo-crypto": "~12.8.1",
