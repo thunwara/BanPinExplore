@@ -11,7 +11,7 @@ import { Link } from "expo-router";
 import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
 import { Listing } from "@/interfaces/listing";
-import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
+import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 interface Props {
   listings: any[];
@@ -34,7 +34,7 @@ const Listings = ({ listings: items, category }: Props) => {
 
   // Render one listing row for the FlatList
   const renderRow: ListRenderItem<Listing> = ({ item }) => (
-    <Link href={`/listing/${item.id}`}>
+    <Link href={`/listing/${item.id}`} asChild>
       <TouchableOpacity>
         <Animated.View
           style={styles.listing}
