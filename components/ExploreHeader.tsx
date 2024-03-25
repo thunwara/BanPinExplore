@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     },
   },
   actionRow: {
+    // backgroundColor: '#f0f',
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
