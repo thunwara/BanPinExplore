@@ -38,8 +38,8 @@ const Listings = ({ listings: items, category }: Props) => {
       <TouchableOpacity>
         <Animated.View
           style={styles.listing}
-          // entering={FadeInRight}
-          // exiting={FadeOutLeft}
+          entering={FadeInRight}
+          exiting={FadeOutLeft}
         >
           <Animated.Image
             source={{ uri: item.medium_url }}
