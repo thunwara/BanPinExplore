@@ -1,12 +1,20 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import { Link } from "expo-router";
-import Colors from "@/constants/Colors";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import Colors from "@/constants/Colors";
+import { Link } from "expo-router";
+// import * as ImagePicker from "expo-image-picker";
 
 const Page = () => {
   const { signOut, isSignedIn } = useAuth();
@@ -50,6 +58,7 @@ const Page = () => {
     //   quality: 0.75,
     //   base64: true,
     // });
+
     // if (!result.canceled) {
     //   const base64 = `data:image/png;base64,${result.assets[0].base64}`;
     //   user?.setProfileImage({
@@ -68,7 +77,7 @@ const Page = () => {
       {user && (
         <View style={styles.card}>
           <TouchableOpacity onPress={onCaptureImage}>
-            {/* <Image source={{ uri: user?.imageUrl }} style={styles.avatar} /> */}
+            <Image source={{ uri: user?.imageUrl }} style={styles.avatar} />
           </TouchableOpacity>
           <View style={{ flexDirection: "row", gap: 6 }}>
             {!edit && (
@@ -115,24 +124,20 @@ const Page = () => {
       )}
 
       {isSignedIn && (
-        <Button
-          title="Log Out"
-          onPress={() => signOut()}
-          // color={Colors.dark}
+        <Button title="Log Out" onPress={() => signOut()} 
+        // color={Colors.dark} 
         />
       )}
       {!isSignedIn && (
         <>
         <Link href={"/(modals)/login"} asChild>
-          <Button
-            title="Log In"
-            // color={Colors.dark}
+          <Button title="Log In" 
+          // color={Colors.dark} 
           />
         </Link>
         <Link href={"/(modals)/register"} asChild>
-          <Button
-            title="create an account"
-            // color={Colors.dark}
+          <Button title="Create Account" 
+          // color={Colors.dark} 
           />
         </Link>
         </>
