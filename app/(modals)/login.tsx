@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Pressable,
+  Button,
 } from "react-native";
 
 import useWarmUpBrowser from "@/hooks/useWarmUpBrowser";
@@ -13,7 +14,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
 import { useOAuth, useSignIn, useUser } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 
 enum Strategy {
@@ -106,6 +107,12 @@ const Page = () => {
 
       <TouchableOpacity style={styles.btnText}>
         <Text style={styles.btnText}>Forgot password?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.btnText}>
+        <Link href={"/(modals)/register"} asChild>
+          <Text>Create Account</Text>
+        </Link>
       </TouchableOpacity>
 
       <View style={styles.seperatorView}>

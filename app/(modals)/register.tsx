@@ -2,7 +2,9 @@ import { Button, TextInput, View, StyleSheet } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useState } from "react";
-import { Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
+import { defaultStyles } from "@/constants/Styles";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Register = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -68,17 +70,19 @@ const Register = () => {
         <>
           <TextInput
             autoCapitalize="none"
-            placeholder="simon@galaxies.dev"
+            placeholder="Email"
+            style={[defaultStyles.inputField, { marginBottom: 30 }]}
             value={emailAddress}
             onChangeText={setEmailAddress}
-            style={styles.inputField}
           />
+
           <TextInput
-            placeholder="password"
+            autoCapitalize="none"
+            placeholder="Password"
+            style={[defaultStyles.inputField, { marginBottom: 30 }]}
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            style={styles.inputField}
           />
 
           <Button
@@ -86,6 +90,21 @@ const Register = () => {
             title="Sign up"
             color={"#6c47ff"}
           ></Button>
+
+          {/* <TextInput
+            autoCapitalize="none"
+            placeholder="simon@galaxies.dev"
+            value={emailAddress}
+            onChangeText={setEmailAddress}
+            style={styles.inputField}
+          /> */}
+          {/* <TextInput
+            placeholder="password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.inputField}
+          /> */}
         </>
       )}
 
@@ -95,7 +114,7 @@ const Register = () => {
             <TextInput
               value={code}
               placeholder="Code..."
-              style={styles.inputField}
+              style={[defaultStyles.inputField, { marginBottom: 30 }]}
               onChangeText={setCode}
             />
           </View>
@@ -104,6 +123,13 @@ const Register = () => {
             title="Verify Email"
             color={"#6c47ff"}
           ></Button>
+
+          <Link href={"/(tabs)/profile"} asChild>
+            <Button
+              title="to profile page"
+              // color={Colors.dark}
+            />
+          </Link>
         </>
       )}
     </View>

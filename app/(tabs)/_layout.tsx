@@ -45,9 +45,9 @@ const Layout = () => {
         }}
       />
       <Tabs.Screen
-        name="inbox"
+        name="booking"
         options={{
-          tabBarLabel: "Inbox",
+          tabBarLabel: "Booking",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="message-outline"

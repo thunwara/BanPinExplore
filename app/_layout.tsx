@@ -78,7 +78,22 @@ function RootLayoutNav() {
       <Stack.Screen
         name="(modals)/login"
         options={{
-          title: "Log in or sign up",
+          title: "Log in",
+          headerBackTitleStyle: {
+            fontFamily: "mon-sb",
+          },
+          presentation: "modal",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="close-outline" size={28} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="(modals)/register"
+        options={{
+          title: "Create Account",
           headerBackTitleStyle: {
             fontFamily: "mon-sb",
           },
