@@ -122,12 +122,20 @@ const Page = () => {
         />
       )}
       {!isSignedIn && (
+        <>
         <Link href={"/(modals)/login"} asChild>
           <Button
             title="Log In"
             // color={Colors.dark}
           />
         </Link>
+        <Link href={"/(modals)/register"} asChild>
+          <Button
+            title="create an account"
+            // color={Colors.dark}
+          />
+        </Link>
+        </>
       )}
     </SafeAreaView>
   );
