@@ -1220,7 +1220,7 @@
 
 "@clerk/clerk-expo@^0.20.10":
   version "0.20.10"
-  resolved "https://registry.npmjs.org/@clerk/clerk-expo/-/clerk-expo-0.20.10.tgz"
+  resolved "https://registry.yarnpkg.com/@clerk/clerk-expo/-/clerk-expo-0.20.10.tgz#f566af2965d54043e0c18b6f91f76a9178b223ee"
   integrity sha512-RHjIpQPEB8gs0YnPVRCHYzObIyxocsXycRHDQGEP60Rn32pF1lbPvJOfRxU13734w+OXs06cEtsoJLA8H3ECtQ==
   dependencies:
     "@clerk/clerk-js" "4.70.5"
@@ -7696,6 +7696,11 @@ react-native-gesture-handler@~2.14.0:
     invariant "^2.2.4"
     lodash "^4.17.21"
     prop-types "^15.7.2"
+
+react-native-loading-spinner-overlay@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-loading-spinner-overlay/-/react-native-loading-spinner-overlay-3.0.1.tgz#092481b8cce157d3af5ef942f845ad981f96bd36"
+  integrity sha512-4GdR54HQnKg2HPSSisVizfTLuyhSh4splY9eb8mKiYF1Ihjn/5EmdNo5bN3S7uKPFRC3WLzIZIouX6G6fXfnjw==
 
 react-native-map-clustering@^3.4.2:
   version "3.4.2"
