@@ -68,7 +68,7 @@ function RootLayoutNav() {
   // Automatically open login if user is not authenticated
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      router.push("/(modals)/login");
+      router.push("/(modals)/signin");
     }
   }, [isLoaded]);
 
@@ -76,7 +76,7 @@ function RootLayoutNav() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
-        name="(modals)/login"
+        name="(modals)/signin"
         options={{
           title: "Log in",
           headerBackTitleStyle: {

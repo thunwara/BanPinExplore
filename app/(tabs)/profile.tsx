@@ -21,6 +21,7 @@ const Page = () => {
   const { user } = useUser();
   const [firstName, setFirstName] = useState(user?.firstName);
   const [lastName, setLastName] = useState(user?.lastName);
+  const [userID, setUserID] = useState(user?.id);
   const [email, setEmail] = useState(user?.emailAddresses[0].emailAddress);
   const [edit, setEdit] = useState(false);
 
@@ -33,6 +34,7 @@ const Page = () => {
     setFirstName(user.firstName);
     setLastName(user.lastName);
     setEmail(user.emailAddresses[0].emailAddress);
+    setUserID(user.id);
   }, [user]);
 
   // Update Clerk user data
@@ -58,7 +60,6 @@ const Page = () => {
     //   quality: 0.75,
     //   base64: true,
     // });
-
     // if (!result.canceled) {
     //   const base64 = `data:image/png;base64,${result.assets[0].base64}`;
     //   user?.setProfileImage({
@@ -124,22 +125,26 @@ const Page = () => {
       )}
 
       {isSignedIn && (
-        <Button title="Log Out" onPress={() => signOut()} 
-        // color={Colors.dark} 
+        <Button
+          title="Log Out"
+          onPress={() => signOut()}
+          // color={Colors.dark}
         />
       )}
       {!isSignedIn && (
         <>
-        <Link href={"/(modals)/login"} asChild>
-          <Button title="Log In" 
-          // color={Colors.dark} 
-          />
-        </Link>
-        <Link href={"/(modals)/register"} asChild>
-          <Button title="Create Account" 
-          // color={Colors.dark} 
-          />
-        </Link>
+          <Link href={"/(modals)/login"} asChild>
+            <Button
+              title="Log In"
+              // color={Colors.dark}
+            />
+          </Link>
+          <Link href={"/(modals)/register"} asChild>
+            <Button
+              title="Create Account"
+              // color={Colors.dark}
+            />
+          </Link>
         </>
       )}
     </SafeAreaView>
