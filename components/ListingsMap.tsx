@@ -10,10 +10,10 @@ interface Props {
 }
 
 const INITIAL_REGION = {
-  latitude: 52.520008,
-  longitude: 13.404954,
-  latitudeDelta: 9,
-  longitudeDelta: 9,
+  latitude: 18.4822,
+  longitude: 100.3013,
+  latitudeDelta: 1,
+  longitudeDelta: 1,
 };
 
 // Overwrite the renderCluster function to customize the cluster markers
