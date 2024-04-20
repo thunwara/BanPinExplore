@@ -107,7 +107,7 @@
           "translation missing: en.hosting_amenity_50",
           "Room-darkening shades"
         ],
-        "price": 900,
+        "price": 500,
         "weekly_price": 227,
         "monthly_price": null,
         "security_deposit": null,
@@ -246,7 +246,7 @@
           "translation missing: en.hosting_amenity_50"
         ],
         "square_feet": null,
-        "price": 45,
+        "price": 450,
         "weekly_price": null,
         "monthly_price": null,
         "security_deposit": null,
@@ -385,7 +385,7 @@
           "translation missing: en.hosting_amenity_50"
         ],
         "square_feet": null,
-        "price": 50,
+        "price": 650,
         "weekly_price": 250,
         "monthly_price": 850,
         "security_deposit": null,
@@ -511,7 +511,7 @@
           "Shampoo"
         ],
         "square_feet": null,
-        "price": 75,
+        "price": 700,
         "weekly_price": 350,
         "monthly_price": 950,
         "security_deposit": 100,
@@ -640,7 +640,7 @@
           "translation missing: en.hosting_amenity_50"
         ],
         "square_feet": null,
-        "price": 50,
+        "price": 600,
         "weekly_price": null,
         "monthly_price": null,
         "security_deposit": null,
@@ -773,7 +773,7 @@
           "translation missing: en.hosting_amenity_50"
         ],
         "square_feet": null,
-        "price": 45,
+        "price": 1500,
         "weekly_price": null,
         "monthly_price": null,
         "security_deposit": null,

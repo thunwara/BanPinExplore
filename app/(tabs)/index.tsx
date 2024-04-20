@@ -10,6 +10,7 @@ import {
   GestureHandlerRootView,
   PanGestureHandler,
 } from "react-native-gesture-handler";
+import Listings from "@/components/Listings";
 
 const Page = () => {
   const items = useMemo(() => listingsData as any, []);
@@ -28,6 +29,7 @@ const Page = () => {
           header: () => <ExploreHeader onCategoryChanged={onDataChanged} />,
         }}
       />
+      {/* <Listings listings={items} refresh={0} category={category} /> */}
       <ListingsMap listings={getoItems} />
       <GestureHandlerRootView>
         <>

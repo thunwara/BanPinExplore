@@ -109,7 +109,7 @@ const Page = () => {
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.placesContainer}
                 >
-                  {places.map((item, index) => (
+                  {/* {places.map((item, index) => (
                     <TouchableOpacity
                       onPress={() => setSelectedPlace(index)}
                       key={index}
@@ -126,7 +126,7 @@ const Page = () => {
                         {item.title}
                       </Text>
                     </TouchableOpacity>
-                  ))}
+                  ))} */}
                 </ScrollView>
               </Animated.View>
             )}

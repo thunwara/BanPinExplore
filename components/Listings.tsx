@@ -16,12 +16,12 @@ const Listings = ({ listings: items, refresh, category }: Props) => {
   const listRef = useRef<BottomSheetFlatListMethods>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Update the view to scroll the list back top
-  useEffect(() => {
-    if (refresh) {
-      scrollListTop();
-    }
-  }, [refresh]);
+  // // Update the view to scroll the list back top
+  // useEffect(() => {
+  //   if (refresh) {
+  //     scrollListTop();
+  //   }
+  // }, [refresh]);
 
   const scrollListTop = () => {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
@@ -54,7 +54,7 @@ const Listings = ({ listings: items, refresh, category }: Props) => {
           </View>
           <Text style={{ fontFamily: 'mon' }}>{item.room_type}</Text>
           <View style={{ flexDirection: 'row', gap: 4 }}>
-            <Text style={{ fontFamily: 'mon-sb' }}>€ {item.price}</Text>
+            <Text style={{ fontFamily: 'mon-sb' }}>{item.price} ฿</Text>
             <Text style={{ fontFamily: 'mon' }}>night</Text>
           </View>
         </Animated.View>

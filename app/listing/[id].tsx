@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Share,
 } from "react-native";
-// import listingsData from "@/assets/data/airbnb-listings.json";
 import listingsData from "@/assets/data/homestay-long-listing.json";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
