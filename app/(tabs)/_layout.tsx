@@ -1,11 +1,8 @@
-import React from "react";
-import { Tabs } from "expo-router";
-import Colors from "@/constants/Colors";
-import {
-  FontAwesome5,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { Tabs } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Colors from '@/constants/Colors';
 
 const Layout = () => {
   return (
@@ -13,56 +10,49 @@ const Layout = () => {
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
         tabBarLabelStyle: {
-          fontFamily: "mon-sb",
+          fontFamily: 'mon-sb',
         },
-      }}
-    >
+      }}>
       <Tabs.Screen
         name="index"
         options={{
-          tabBarLabel: "Explore",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="search" color={color} size={size} />
-          ),
+          tabBarLabel: 'Explore',
+          tabBarIcon: ({ size, color }) => <Ionicons name="search" size={size} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="wishlist"
+        name="wishlists"
         options={{
-          tabBarLabel: "Wishlist",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="heart-outline" color={color} size={size} />
+          tabBarLabel: 'Wishlists',
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="heart-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="trips"
         options={{
-          tabBarLabel: "Trips",
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome5 name="airbnb" color={color} size={size} />
-          ),
+          tabBarLabel: 'Trips',
+          tabBarIcon: ({ size, color }) => <FontAwesome5 name="airbnb" size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="booking"
         options={{
-          tabBarLabel: "Booking",
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="message-outline"
-              color={color}
-              size={size}
-            />
+          tabBarLabel: 'Booking',
+          tabBarIcon: ({ size, color }) => (
+            <MaterialCommunityIcons name="message-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarLabel: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-circle-outline" color={color} size={size} />
+          tabBarLabel: 'Profile',
+
+          headerShown: false,
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="person-circle-outline" size={size} color={color} />
           ),
         }}
       />

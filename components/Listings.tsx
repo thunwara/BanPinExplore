@@ -8,11 +8,11 @@ import { BottomSheetFlatList, BottomSheetFlatListMethods } from '@gorhom/bottom-
 
 interface Props {
   listings: any[];
-  refresh: number;
+  // refresh: number;
   category: string;
 }
 
-const Listings = ({ listings: items, refresh, category }: Props) => {
+const Listings = ({ listings: items, category }: Props) => {
   const listRef = useRef<BottomSheetFlatListMethods>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
