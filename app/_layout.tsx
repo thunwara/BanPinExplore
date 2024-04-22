@@ -1,16 +1,15 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-import { Stack, useRouter } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
+import { SplashScreen, Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { TouchableOpacity } from "react-native";
-import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
-import ModalHeaderText from "@/components/ModalHeaderText";
+import * as SecureStore from "expo-secure-store";
+import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
+import ModalHeaderText from "@/components/ModalHeaderText";
+import { TouchableOpacity } from "react-native";
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
+// Cache the Clerk JWT
 const tokenCache = {
   async getToken(key: string) {
     try {
@@ -70,50 +69,29 @@ function RootLayoutNav() {
   // Automatically open login if user is not authenticated
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      router.push("/(modals)/signin");
+      router.push("/(modals)/login");
     }
   }, [isLoaded]);
 
   return (
     <Stack>
+      <Stack.Screen
+        name="(modals)/login"
+        options={{
+          presentation: "modal",
+          title: "Log in or sign up",
+          headerTitleStyle: {
+            fontFamily: "mon-sb",
+          },
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="close-outline" size={28} />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="(modals)/signin"
-        options={{
-          title: "Log in",
-          headerBackTitleStyle: {
-            fontFamily: "mon-sb",
-          },
-          presentation: "modal",
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()}>
-              <Ionicons name="close-outline" size={28} />
-            </TouchableOpacity>
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="(modals)/register"
-        options={{
-          title: "Create Account",
-          headerBackTitleStyle: {
-            fontFamily: "mon-sb",
-          },
-          presentation: "modal",
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()}>
-              <Ionicons name="close-outline" size={28} />
-            </TouchableOpacity>
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="listing/[id]"
-        options={{
-          headerTitle: "",
-          headerTransparent: true,
-        }}
-      />
+      <Stack.Screen name="listing/[id]" options={{ headerTitle: "" }} />
       <Stack.Screen
         name="(modals)/booking"
         options={{
