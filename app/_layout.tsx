@@ -1,12 +1,23 @@
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import ModalHeaderText from "@/components/ModalHeaderText";
 import { TouchableOpacity } from "react-native";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_AUTH } from "@/FirebaseConfig";
+
+// const [user, setUser] = useState<User | null>(null);
+
+// useEffect(() => {
+//   onAuthStateChanged(FIREBASE_AUTH, (user) => {
+//     console.log("user", user);
+//     setUser(user);
+//   });
+// }, []);
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 // Cache the Clerk JWT
@@ -26,6 +37,8 @@ const tokenCache = {
     }
   },
 };
+
+// const [user, setUser] = useState<User | null>(null);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -69,7 +82,7 @@ function RootLayoutNav() {
   // Automatically open login if user is not authenticated
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      router.push("/(modals)/login");
+      // router.push("/(modals)/login");
     }
   }, [isLoaded]);
 

@@ -7,87 +7,165 @@ import {
   TouchableOpacity,
   Pressable,
   Button,
+  KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
-
 import useWarmUpBrowser from "@/hooks/useWarmUpBrowser";
 import Spinner from "react-native-loading-spinner-overlay";
 import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
-import { useOAuth, useSignIn, useUser } from "@clerk/clerk-expo";
+// import { useOAuth, useSignIn, useUser } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
+import { FIREBASE_AUTH } from "@/FirebaseConfig";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
-enum Strategy {
-  Google = "oauth_google",
-  // Apple = "oauth_apple",
-  // Facebook = "oauth_facebook",
-}
+// enum Strategy {
+//   Google = "oauth_google",
+//   // Apple = "oauth_apple",
+//   // Facebook = "oauth_facebook",
+// }
 
 const Page = () => {
-  const { signIn, setActive, isLoaded } = useSignIn();
+  // const { signIn, setActive, isLoaded } = useSignIn();
+  // const [emailAddress, setEmailAddress] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [loading, setLoading] = useState(false);
+  // const { user } = useUser();
 
-  const [emailAddress, setEmailAddress] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
 
-  const { user } = useUser();
-
-  useWarmUpBrowser();
-
-  const router = useRouter();
-  const { startOAuthFlow: googleAuth } = useOAuth({ strategy: "oauth_google" });
-  // const { startOAuthFlow: appleAuth } = useOAuth({ strategy: "oauth_apple" });
-  // const { startOAuthFlow: facebookAuth } = useOAuth({strategy: "oauth_facebook"});
-
-  const onLogInPress = async () => {
-    if (!isLoaded) {
-      return;
-    }
+  const signIn = async () => {
     setLoading(true);
     try {
-      const completeSignIn = await signIn.create({
-        identifier: emailAddress,
-        password,
-      });
-
-      // This indicates the user is signed in
-      await setActive({ session: completeSignIn.createdSessionId });
-    } catch (err: any) {
-      alert(err.errors[0].message);
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log(response);
+    } catch (error: any) {
+      console.log(error);
+      alert("Sign in failed: " + error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const onSelectAuth = async (strategy: Strategy) => {
-    const selectedAuth = {
-      [Strategy.Google]: googleAuth,
-      // [Strategy.Apple]: appleAuth,
-      // [Strategy.Facebook]: facebookAuth,
-    }[strategy];
-
+  const signUp = async () => {
+    setLoading(true);
     try {
-      const { createdSessionId, setActive } = await selectedAuth();
-      console.log(
-        "🚀 ~ file: login.tsx:31 ~ onSelectAuth ~ createdSessionId:",
-        createdSessionId
+      const response = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
-
-      if (createdSessionId) {
-        setActive!({ session: createdSessionId });
-        router.back(); //close modal after finishing authen
-      }
-    } catch (err) {
-      console.error("OAuth error", err);
+      console.log(response);
+      alert("Check you emails!");
+    } catch (error: any) {
+      console.log(error);
+      alert("Sign un failed: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  useWarmUpBrowser();
+
+  const router = useRouter();
+  // const { startOAuthFlow: googleAuth } = useOAuth({ strategy: "oauth_google" });
+  // const { startOAuthFlow: appleAuth } = useOAuth({ strategy: "oauth_apple" });
+  // const { startOAuthFlow: facebookAuth } = useOAuth({strategy: "oauth_facebook"});
+
+  // const onLogInPress = async () => {
+  //   if (!isLoaded) {
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   try {
+  //     const completeSignIn = await signIn.create({
+  //       identifier: emailAddress,
+  //       password,
+  //     });
+
+  //     // This indicates the user is signed in
+  //     await setActive({ session: completeSignIn.createdSessionId });
+  //   } catch (err: any) {
+  //     alert(err.errors[0].message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const onSelectAuth = async (strategy: Strategy) => {
+  //   const selectedAuth = {
+  //     [Strategy.Google]: googleAuth,
+  //     // [Strategy.Apple]: appleAuth,
+  //     // [Strategy.Facebook]: facebookAuth,
+  //   }[strategy];
+
+  //   try {
+  //     const { createdSessionId, setActive } = await selectedAuth();
+  //     console.log(
+  //       "🚀 ~ file: login.tsx:31 ~ onSelectAuth ~ createdSessionId:",
+  //       createdSessionId
+  //     );
+
+  //     if (createdSessionId) {
+  //       setActive!({ session: createdSessionId });
+  //       router.back(); //close modal after finishing authen
+  //     }
+  //   } catch (err) {
+  //     console.error("OAuth error", err);
+  //   }
+  // };
+
   return (
     <View style={styles.container}>
-      <TextInput
+      <KeyboardAvoidingView behavior="padding">
+        <TextInput
+          autoCapitalize="none"
+          placeholder="Email"
+          style={[defaultStyles.inputField, { marginBottom: 30 }]}
+          placeholderTextColor="#ABABAB"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        ></TextInput>
+
+        <TextInput
+          autoCapitalize="none"
+          placeholder="Password"
+          style={[defaultStyles.inputField, { marginBottom: 30 }]}
+          placeholderTextColor="#ABABAB"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry
+        ></TextInput>
+
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
+
+        <TouchableOpacity
+          onPress={signIn}
+          style={[defaultStyles.btn, { marginBottom: 10 }]}
+        >
+          <Text style={defaultStyles.btnText}>Continue</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={signUp}
+          style={[defaultStyles.btn, { marginBottom: 10 }]}
+        >
+          <Text style={defaultStyles.btnText}>Create Account</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+
+      {/* <TextInput
         autoCapitalize="none"
         placeholder="Email"
         style={[defaultStyles.inputField, { marginBottom: 30 }]}
+        placeholderTextColor="#ABABAB"
         value={emailAddress}
         onChangeText={setEmailAddress}
       />
@@ -96,26 +174,14 @@ const Page = () => {
         autoCapitalize="none"
         placeholder="Password"
         style={[defaultStyles.inputField, { marginBottom: 30 }]}
+        placeholderTextColor="#ABABAB"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-      />
+      /> */}
 
-      <TouchableOpacity onPress={onLogInPress} style={defaultStyles.btn}>
-        <Text style={defaultStyles.btnText}>Continue</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.btnText}>
-        <Text style={styles.btnText}>Forgot password?</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.btnText}>
-        <Link href={"/(modals)/register"} asChild>
-          <Text>Create Account</Text>
-        </Link>
-      </TouchableOpacity>
-
-      <View style={styles.seperatorView}>
+      {/* section line */}
+      {/* <View style={styles.seperatorView}>
         <View
           style={{
             flex: 1,
@@ -131,9 +197,10 @@ const Page = () => {
             borderBottomWidth: StyleSheet.hairlineWidth,
           }}
         />
-      </View>
+      </View> */}
 
-      <View style={{ gap: 20 }}>
+      {/* googleAuth */}
+      {/* <View style={{ gap: 20 }}>
         <TouchableOpacity
           style={styles.btnOutline}
           onPress={() => onSelectAuth(Strategy.Google)}
@@ -145,7 +212,7 @@ const Page = () => {
           />
           <Text style={styles.btnOutlineText}>Continue with Google</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };

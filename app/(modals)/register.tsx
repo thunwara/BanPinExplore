@@ -97,8 +97,8 @@ const Register = () => {
             value={emailAddress}
             onChangeText={setEmailAddress}
             style={styles.inputField}
-          /> */}
-          {/* <TextInput
+          />
+          <TextInput
             placeholder="password"
             value={password}
             onChangeText={setPassword}

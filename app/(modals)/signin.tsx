@@ -1,13 +1,20 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  ActivityIndicator,
+  KeyboardAvoidingView,
+} from "react-native";
 import React, { useState } from "react";
 import { FIREBASE_AUTH } from "@/FirebaseConfig";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { Link, useRouter } from "expo-router";
+// import { Link, useRouter } from "expo-router";
 import Colors from "@/constants/Colors";
-import { TextInput } from "react-native-gesture-handler";
 import { defaultStyles } from "@/constants/Styles";
 
 const Login = () => {
@@ -21,7 +28,6 @@ const Login = () => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log(response);
-      alert("Check your email!");
     } catch (error: any) {
       console.log(error);
       alert("Sign in failed: " + error.message);
@@ -50,30 +56,42 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      {/* <TextInput
-        autoCapitalize="none"
-        placeholder="Email"
-        style={[defaultStyles.inputField, { marginBottom: 30 }]}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      ></TextInput>
+      <KeyboardAvoidingView behavior="padding">
+        <TextInput
+          autoCapitalize="none"
+          placeholder="Email"
+          style={[defaultStyles.inputField, { marginBottom: 30 }]}
+          placeholderTextColor="#ABABAB"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        ></TextInput>
 
-      <TextInput
-        autoCapitalize="none"
-        placeholder="Password"
-        style={[defaultStyles.inputField, { marginBottom: 30 }]}
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        secureTextEntry
-      ></TextInput> */}
+        <TextInput
+          autoCapitalize="none"
+          placeholder="Password"
+          style={[defaultStyles.inputField, { marginBottom: 30 }]}
+          placeholderTextColor="#ABABAB"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry
+        ></TextInput>
 
-      <TouchableOpacity onPress={signIn} style={defaultStyles.btn}>
-        <Text style={defaultStyles.btnText}>Continue</Text>
-      </TouchableOpacity>
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
 
-      <TouchableOpacity onPress={signUp} style={defaultStyles.btn}>
-        <Text style={defaultStyles.btnText}>Create Account</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={signIn}
+          style={[defaultStyles.btn, { marginBottom: 10 }]}
+        >
+          <Text style={defaultStyles.btnText}>Continue</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={signUp}
+          style={[defaultStyles.btn, { marginBottom: 10 }]}
+        >
+          <Text style={defaultStyles.btnText}>Create Account</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
     </View>
   );
 };
