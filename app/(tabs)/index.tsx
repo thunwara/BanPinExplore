@@ -8,7 +8,6 @@ import ExploreHeader from "@/components/ExploreHeader";
 import ListingsBottomSheet from "@/components/ListingsBottomSheet";
 import listingsData from "@/assets/data/homestay-long-listing.json";
 import listingsDataGeo from "@/assets/data/homestay-long-listing.geo.json";
-import Listings from "@/components/Listings";
 
 const Page = () => {
   const items = useMemo(() => listingsData as any, []);
@@ -27,9 +26,8 @@ const Page = () => {
           header: () => <ExploreHeader onCategoryChanged={onDataChanged} />,
         }}
       />
-      {/* <Listings listings={items} refresh={0} category={category} /> */}
+      <GestureHandlerRootView style={{flex: 1}}>
       <ListingsMap listings={getoItems} />
-      <GestureHandlerRootView>
         <ListingsBottomSheet listings={items} category={category} />
       </GestureHandlerRootView>
     </View>

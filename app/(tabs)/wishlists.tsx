@@ -6,7 +6,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import { initializeApp } from "firebase/app";
 import {

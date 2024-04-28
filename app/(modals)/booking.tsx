@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   SafeAreaView,
+  TextInput,
 } from "react-native";
 import { useState } from "react";
 import Animated, {
@@ -14,10 +15,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import {
-  GestureHandlerRootView,
-  TextInput,
-} from "react-native-gesture-handler";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { defaultStyles } from "@/constants/Styles";
 import Colors from "@/constants/Colors";
@@ -95,13 +92,11 @@ const Page = () => {
                 size={20}
                 color="#000"
               />
-              <GestureHandlerRootView>
-                <TextInput
-                  style={styles.inputField}
-                  placeholder="Search destinations"
-                  placeholderTextColor={Colors.grey}
-                />
-              </GestureHandlerRootView>
+              <TextInput
+                style={styles.inputField}
+                placeholder="Search destinations"
+                placeholderTextColor={Colors.grey}
+              />
             </View>
 
             <ScrollView
