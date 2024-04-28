@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   SafeAreaView,
+  TextInput,
 } from "react-native";
 import { useState } from "react";
 import Animated, {
@@ -14,10 +15,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-import {
-  GestureHandlerRootView,
-  TextInput,
-} from "react-native-gesture-handler";
 import { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { defaultStyles } from "@/constants/Styles";
 import Colors from "@/constants/Colors";
@@ -69,47 +66,46 @@ const Page = () => {
     <>
       <BlurView intensity={70} style={styles.container} tint="light">
         {/*  Where */}
-        <GestureHandlerRootView>
-          <View style={styles.card}>
-            {openCard != 0 && (
-              <AnimatedTouchableOpacity
-                onPress={() => setOpenCard(0)}
-                style={styles.cardPreview}
-                entering={FadeIn.duration(200)}
-                exiting={FadeOut.duration(200)}
-              >
-                <Text style={styles.previewText}>Where</Text>
-                <Text style={styles.previewdData}>I'm flexible</Text>
-              </AnimatedTouchableOpacity>
-            )}
+        <View style={styles.card}>
+          {openCard != 0 && (
+            <AnimatedTouchableOpacity
+              onPress={() => setOpenCard(0)}
+              style={styles.cardPreview}
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(200)}
+            >
+              <Text style={styles.previewText}>Where</Text>
+              <Text style={styles.previewdData}>I'm flexible</Text>
+            </AnimatedTouchableOpacity>
+          )}
 
-            {openCard == 0 && <Text style={styles.cardHeader}>Where to?</Text>}
-            {openCard == 0 && (
-              <Animated.View
-                entering={FadeIn}
-                exiting={FadeOut}
-                style={styles.cardBody}
-              >
-                <View style={styles.searchSection}>
-                  <Ionicons
-                    style={styles.searchIcon}
-                    name="search-circle-outline"
-                    size={20}
-                    color="#000"
-                  />
-                  <TextInput
-                    style={styles.inputField}
-                    placeholder="Search destinations"
-                    placeholderTextColor={Colors.grey}
-                  />
-                </View>
+          {openCard == 0 && <Text style={styles.cardHeader}>Where to?</Text>}
+          {openCard == 0 && (
+            <Animated.View
+              entering={FadeIn}
+              exiting={FadeOut}
+              style={styles.cardBody}
+            >
+              <View style={styles.searchSection}>
+                <Ionicons
+                  style={styles.searchIcon}
+                  name="search-circle-outline"
+                  size={20}
+                  color="#000"
+                />
+                <TextInput
+                  style={styles.inputField}
+                  placeholder="Search destinations"
+                  placeholderTextColor={Colors.grey}
+                />
+              </View>
 
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.placesContainer}
-                >
-                  {/* {places.map((item, index) => (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.placesContainer}
+              >
+                {/* {places.map((item, index) => (
                     <TouchableOpacity
                       onPress={() => setSelectedPlace(index)}
                       key={index}
@@ -127,11 +123,10 @@ const Page = () => {
                       </Text>
                     </TouchableOpacity>
                   ))} */}
-                </ScrollView>
-              </Animated.View>
-            )}
-          </View>
-        </GestureHandlerRootView>
+              </ScrollView>
+            </Animated.View>
+          )}
+        </View>
 
         {/* When */}
         <View style={styles.card}>
