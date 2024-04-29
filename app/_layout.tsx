@@ -11,12 +11,14 @@ import { User, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "@/FirebaseConfig";
 
 // const [user, setUser] = useState<User | null>(null);
+// const Users = FIREBASE_AUTH.currentUser;
 
 // useEffect(() => {
 //   onAuthStateChanged(FIREBASE_AUTH, (user) => {
 //     console.log("user", user);
 //     setUser(user);
 //   });
+//   console.log("")
 // }, []);
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -37,8 +39,6 @@ const tokenCache = {
     }
   },
 };
-
-// const [user, setUser] = useState<User | null>(null);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -82,7 +82,7 @@ function RootLayoutNav() {
   // Automatically open login if user is not authenticated
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      // router.push("/(modals)/login");
+      router.push("/(modals)/login");
     }
   }, [isLoaded]);
 

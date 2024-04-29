@@ -14,10 +14,10 @@ import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Link } from "expo-router";
-import Login from "../(modals)/signin";
+import Login from "../(modals)/login";
 import wishlists from "@/app/(tabs)/wishlists";
 import trips from "@/app/(tabs)/trips";
-import { User, onAuthStateChanged } from "firebase/auth";
+import { User, onAuthStateChanged, signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "@/FirebaseConfig";
 import * as ImagePicker from "expo-image-picker";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -26,6 +26,8 @@ import { NavigationContainer } from "@react-navigation/native";
 const Stack = createNativeStackNavigator();
 
 const InsideStack = createNativeStackNavigator();
+
+const Users = FIREBASE_AUTH.currentUser;
 
 function InsideLayout() {
   return (
@@ -37,14 +39,6 @@ function InsideLayout() {
 }
 
 const Page = () => {
-  // const { signOut, isSignedIn } = useAuth();
-  // const { user } = useUser();
-  // const [firstName, setFirstName] = useState(user?.firstName);
-  // const [lastName, setLastName] = useState(user?.lastName);
-  // const [userID, setUserID] = useState(user?.id);
-  // const [email, setEmail] = useState(user?.emailAddresses[0].emailAddress);
-  // const [edit, setEdit] = useState(false);
-
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -60,165 +54,77 @@ const Page = () => {
   //     return;
   //   }
 
-  //   setFirstName(user.firstName);
-  //   setLastName(user.lastName);
-  //   setEmail(user.emailAddresses[0].emailAddress);
-  //   setUserID(user.id);
-  // }, [user]);
-
-  // Update Clerk user data
-  // const onSaveUser = async () => {
-  //   try {
-  //     await user?.update({
-  //       firstName: firstName!,
-  //       lastName: lastName!,
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setEdit(false);
-  //   }
-  // };
-
-  // Capture image from camera roll
-  // Upload to Clerk as avatar
-  // const onCaptureImage = async () => {
-  // let result = await ImagePicker.launchImageLibraryAsync({
-  //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //   allowsEditing: true,
-  //   quality: 0.75,
-  //   base64: true,
-  // });
-  // if (!result.canceled) {
-  //   const base64 = `data:image/png;base64,${result.assets[0].base64}`;
-  //   user?.setProfileImage({
-  //     file: base64,
-  //   });
-  // }
-  // };
+  const button = async () => {
+    console.log("BUTTON PRESSED");
+  };
 
   return (
-    <SafeAreaView style={defaultStyles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Profile</Text>
-        <Ionicons name="notifications-outline" size={26} />
-      </View>
-
-      {/* {user && (
-        <View style={styles.card}>
-          <TouchableOpacity onPress={onCaptureImage}>
-            <Image source={{ uri: user?.imageUrl }} style={styles.avatar} />
-          </TouchableOpacity>
-          <View style={{ flexDirection: "row", gap: 6 }}>
-            {!edit && (
-              <View style={styles.editRow}>
-                <Text style={{ fontFamily: "mon-b", fontSize: 22 }}>
-                  {firstName} {lastName}
-                </Text>
-                <TouchableOpacity onPress={() => setEdit(true)}>
-                  <Ionicons
-                    name="create-outline"
-                    size={24}
-                    // color={Colors.dark}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-            {edit && (
-              <View style={styles.editRow}>
-                <TextInput
-                  placeholder="First Name"
-                  value={firstName || ""}
-                  onChangeText={setFirstName}
-                  style={[defaultStyles.inputField, { width: 100 }]}
-                />
-                <TextInput
-                  placeholder="Last Name"
-                  value={lastName || ""}
-                  onChangeText={setLastName}
-                  style={[defaultStyles.inputField, { width: 100 }]}
-                />
-                <TouchableOpacity onPress={onSaveUser}>
-                  <Ionicons
-                    name="checkmark-outline"
-                    size={24}
-                    // color={Colors.dark}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-          <Text>{email}</Text>
-          <Text>Since {user?.createdAt!.toLocaleDateString()}</Text>
+    <>
+      <SafeAreaView style={defaultStyles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Profile</Text>
+          <Ionicons name="notifications-outline" size={26} />
         </View>
-      )} */}
 
-      {/* {isSignedIn && (
-        <Button
-          title="Log Out"
-          onPress={() => signOut()}
-          // color={Colors.dark}
-        />
-      )} */}
+        {!user && (
+          <>
+            <Text>please sign in</Text>
+            <Link href={"/(modals)/login"} asChild>
+              <TouchableOpacity style={styles.container}>
+                <Ionicons
+                  name="create-outline"
+                  size={24}
+                  // color={Colors.dark}
+                />
+                <Text>Sign in</Text>
+              </TouchableOpacity>
+            </Link>
+          </>
+        )}
 
-      {!user && (
-        <>
-          <Text>please sign in</Text>
+        {user && (
+          <View style={styles.card}>
+            <View style={{ flexDirection: "row", gap: 6 }}>
+            </View>
+            <Text>hello,</Text>
+            <Text>email: {user.email}</Text>
+            <Text>Since {user?.uid}</Text>
+          </View>
+        )}
+
+        {user && (
           <Button
-            title="Sign In"
-            onPress={()=>"login"}
-            // color={Colors.dark}
+            title="Log Out"
+            onPress={() => {
+              signOut(FIREBASE_AUTH)
+                .then(() => {
+                  console.log("USER SIGN OUT");
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }}
+            color="black"
           />
-        </>
-      )}
+        )}
+      </SafeAreaView>
 
-      {user && (
-        <>
-          <Text>hello</Text>
-        </>
-      )}
-
-      {/* {!isSignedIn && (
-        <>
-          <Link href={"/(modals)/login"} asChild>
-            <Button
-              title="Log In"
-              // color={Colors.dark}
-            />
-          </Link>
-          <Link href={"/(modals)/register"} asChild>
-            <Button
-              title="Create Account"
-              // color={Colors.dark}
-            />
-          </Link>
-          <Link href={"/(modals)/signin"} asChild>
-            <Button
-              title="Sign in firebase"
-              // color={Colors.dark}
-            />
-          </Link>
-        </>
-      )} */}
-    </SafeAreaView>
-
-    // <NavigationContainer>
-    //   <Stack.Navigator initialRouteName="Login">
-    //     {user ? (
-    //       <Stack.Screen
-    //         name="Inside"
-    //         component={InsideLayout}
-    //         options={{ headerShown: true }}
-    //       />
-    //     ) : (
-    //       <Stack.Screen
-    //         name="Login"
-    //         component={Login}
-    //         options={{ headerShown: true }}
-    //       />
-    //     )}
-    //   </Stack.Navigator>
-    // </NavigationContainer>
+      {/* <Stack.Navigator initialRouteName="Login">
+        {user ? (
+          <Stack.Screen
+            name="Inside"
+            component={InsideLayout}
+            options={{ headerShown: true }}
+          />
+        ) : (
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: true }}
+          />
+        )}
+      </Stack.Navigator> */}
+    </>
   );
 };
 
@@ -262,6 +168,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
+  },
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFF00",
+    padding: 10,
+    marginVertical: 4,
   },
 });
 

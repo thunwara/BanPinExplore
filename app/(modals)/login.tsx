@@ -14,32 +14,28 @@ import useWarmUpBrowser from "@/hooks/useWarmUpBrowser";
 import Spinner from "react-native-loading-spinner-overlay";
 import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
-// import { useOAuth, useSignIn, useUser } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
-import { FIREBASE_AUTH } from "@/FirebaseConfig";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "@/FirebaseConfig";
 import {
+  User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-
-// enum Strategy {
-//   Google = "oauth_google",
-//   // Apple = "oauth_apple",
-//   // Facebook = "oauth_facebook",
-// }
+import { doc, setDoc } from "firebase/firestore";
 
 const Page = () => {
-  // const { signIn, setActive, isLoaded } = useSignIn();
-  // const [emailAddress, setEmailAddress] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [loading, setLoading] = useState(false);
-  // const { user } = useUser();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLasttName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const auth = FIREBASE_AUTH;
+  const db = FIRESTORE_DB;
+  const [user, setUser] = useState<User | null>(null);
+
+  const router = useRouter();
 
   const signIn = async () => {
     setLoading(true);
@@ -51,76 +47,42 @@ const Page = () => {
       alert("Sign in failed: " + error.message);
     } finally {
       setLoading(false);
+      router.back();
     }
   };
 
   const signUp = async () => {
     setLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(
+      // Create user in Firebase Authentication
+      const { user: authUser } = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      console.log(response);
-      alert("Check you emails!");
+      console.log("User created in Firebase Authentication:", authUser);
+
+      // Create user document in Firestore
+      const userRef = doc(db, "Users", authUser.uid);
+      await setDoc(userRef, {
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        // Add additional fields as needed
+      });
+      console.log("User data created in Firestore");
+
+      alert("Account created successfully!");
     } catch (error: any) {
-      console.log(error);
-      alert("Sign un failed: " + error.message);
+      console.error("Sign up failed:", error.message);
+      alert("Sign up failed: " + error.message);
     } finally {
       setLoading(false);
+      router.back();
     }
   };
 
   useWarmUpBrowser();
-
-  const router = useRouter();
-  // const { startOAuthFlow: googleAuth } = useOAuth({ strategy: "oauth_google" });
-  // const { startOAuthFlow: appleAuth } = useOAuth({ strategy: "oauth_apple" });
-  // const { startOAuthFlow: facebookAuth } = useOAuth({strategy: "oauth_facebook"});
-
-  // const onLogInPress = async () => {
-  //   if (!isLoaded) {
-  //     return;
-  //   }
-  //   setLoading(true);
-  //   try {
-  //     const completeSignIn = await signIn.create({
-  //       identifier: emailAddress,
-  //       password,
-  //     });
-
-  //     // This indicates the user is signed in
-  //     await setActive({ session: completeSignIn.createdSessionId });
-  //   } catch (err: any) {
-  //     alert(err.errors[0].message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const onSelectAuth = async (strategy: Strategy) => {
-  //   const selectedAuth = {
-  //     [Strategy.Google]: googleAuth,
-  //     // [Strategy.Apple]: appleAuth,
-  //     // [Strategy.Facebook]: facebookAuth,
-  //   }[strategy];
-
-  //   try {
-  //     const { createdSessionId, setActive } = await selectedAuth();
-  //     console.log(
-  //       "🚀 ~ file: login.tsx:31 ~ onSelectAuth ~ createdSessionId:",
-  //       createdSessionId
-  //     );
-
-  //     if (createdSessionId) {
-  //       setActive!({ session: createdSessionId });
-  //       router.back(); //close modal after finishing authen
-  //     }
-  //   } catch (err) {
-  //     console.error("OAuth error", err);
-  //   }
-  // };
 
   return (
     <View style={styles.container}>
@@ -144,6 +106,33 @@ const Page = () => {
           secureTextEntry
         ></TextInput>
 
+        <TextInput
+          autoCapitalize="none"
+          placeholder="First Name"
+          style={[defaultStyles.inputField, { marginBottom: 30 }]}
+          placeholderTextColor="#ABABAB"
+          value={firstName}
+          onChangeText={(text) => setFirstName(text)}
+        ></TextInput>
+
+        <TextInput
+          autoCapitalize="none"
+          placeholder="Last Name"
+          style={[defaultStyles.inputField, { marginBottom: 30 }]}
+          placeholderTextColor="#ABABAB"
+          value={lastName}
+          onChangeText={(text) => setLasttName(text)}
+        ></TextInput>
+
+        <TextInput
+          autoCapitalize="none"
+          placeholder="Phone Number"
+          style={[defaultStyles.inputField, { marginBottom: 30 }]}
+          placeholderTextColor="#ABABAB"
+          value={phoneNumber}
+          onChangeText={(text) => setPhoneNumber(text)}
+        ></TextInput>
+
         {loading && <ActivityIndicator size="large" color="#0000ff" />}
 
         <TouchableOpacity
@@ -160,59 +149,6 @@ const Page = () => {
           <Text style={defaultStyles.btnText}>Create Account</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
-
-      {/* <TextInput
-        autoCapitalize="none"
-        placeholder="Email"
-        style={[defaultStyles.inputField, { marginBottom: 30 }]}
-        placeholderTextColor="#ABABAB"
-        value={emailAddress}
-        onChangeText={setEmailAddress}
-      />
-
-      <TextInput
-        autoCapitalize="none"
-        placeholder="Password"
-        style={[defaultStyles.inputField, { marginBottom: 30 }]}
-        placeholderTextColor="#ABABAB"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      /> */}
-
-      {/* section line */}
-      {/* <View style={styles.seperatorView}>
-        <View
-          style={{
-            flex: 1,
-            borderBottomColor: "black",
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
-        <Text style={styles.seperator}>or</Text>
-        <View
-          style={{
-            flex: 1,
-            borderBottomColor: "black",
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
-      </View> */}
-
-      {/* googleAuth */}
-      {/* <View style={{ gap: 20 }}>
-        <TouchableOpacity
-          style={styles.btnOutline}
-          onPress={() => onSelectAuth(Strategy.Google)}
-        >
-          <Ionicons
-            name="logo-google"
-            size={24}
-            style={defaultStyles.btnIcon}
-          />
-          <Text style={styles.btnOutlineText}>Continue with Google</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
   );
 };
