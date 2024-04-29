@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -25,8 +25,11 @@ import { useRouter } from "expo-router";
 // @ts-ignore
 import DatePicker from "react-native-modern-datepicker";
 
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "@/FirebaseConfig";
+
+import { Dropdown } from "react-native-element-dropdown";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -54,6 +57,13 @@ const guestsGropus = [
   },
 ];
 
+export interface Homestay {
+  District: string;
+  HomestayName: string;
+  HomestayOwner: string;
+  id: string;
+}
+
 const Page = () => {
   const [openCard, setOpenCard] = useState(0);
   const [selectedPlace, setSelectedPlace] = useState(0);
@@ -62,17 +72,47 @@ const Page = () => {
   const router = useRouter();
   const today = new Date().toISOString().substring(0, 10);
 
+  const [homestays, setHomestays] = useState<{ id: string }[]>([]);
+  const [selectedHomestay, setSelectedHomestay] = useState("");
+  const [status] = useState("booked");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [numPeople, setNumPeople] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const fetchHomestays = async () => {
+      try {
+        const homestaySnapshot = await getDocs(
+          collection(FIRESTORE_DB, "Homestay")
+        );
+        const homestayData = homestaySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setHomestays(homestayData);
+      } catch (error) {
+        console.error("Error fetching homestays:", error);
+      } finally {
+        // console.log("Homestay data fetched:", homestays);
+      }
+    };
+    fetchHomestays();
+  }, []);
+
+  useEffect(() => {
+    // Check if homestay data has been fetched
+    if (homestays.length > 0) {
+      console.log("Homestay data fetched:", homestays);
+    }
+  }, [homestays]);
+
   const onClearAll = () => {
     setSelectedPlace(0);
     setOpenCard(0);
-    setStartDate('');
-    setEndDate('');
-    setNumPeople('');
+    setStartDate("");
+    setEndDate("");
+    setNumPeople("");
   };
 
   const saveBooking = async () => {
@@ -85,11 +125,12 @@ const Page = () => {
           startDate: startDate,
           endDate: endDate,
           numPeople: numPeople,
+          homestayId: selectedHomestay,
+          status: status,
           selectedPlace: selectedPlace, // Assuming you have the place information stored somewhere
           userID: currentUser.uid, // Add the userID field with the current user's UID
         };
         await addDoc(collection(FIRESTORE_DB, "Booking"), bookingData);
-        alert("Booking information is sent to the homestay owner");
       } else {
         throw new Error("User not authenticated");
       }
@@ -98,7 +139,7 @@ const Page = () => {
       alert("Booking failed: " + error.message);
     } finally {
       setLoading(false);
-      router.navigate("/(tabs)/booking")
+      router.navigate("/(tabs)/booking");
     }
   };
 
@@ -106,6 +147,21 @@ const Page = () => {
     <BlurView intensity={70} style={styles.container} tint="light">
       <View style={styles.container}>
         <KeyboardAvoidingView behavior="padding">
+          {/* Dropdown to select homestay */}
+          {/* <Dropdown
+            options={homestays}
+            onSelect={(selectedHomestay) => setSelectedHomestay(selectedHomestay)}
+          /> */}
+
+          <TextInput
+            autoCapitalize="none"
+            placeholder="Homestay"
+            style={[defaultStyles.inputField, { marginBottom: 30 }]}
+            placeholderTextColor="#ABABAB"
+            value={selectedHomestay}
+            onChangeText={(text) => setSelectedHomestay(text)}
+          ></TextInput>
+
           <TextInput
             autoCapitalize="none"
             placeholder="Start Date"

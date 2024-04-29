@@ -41,7 +41,7 @@ const Page = () => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      // console.log(response);
     } catch (error: any) {
       console.log(error);
       alert("Sign in failed: " + error.message);

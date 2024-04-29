@@ -1,187 +1,170 @@
 import {
   View,
   Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  SafeAreaView,
   TextInput,
-  KeyboardAvoidingView,
-  ActivityIndicator,
+  Button,
+  FlatList,
+  TouchableOpacity,
 } from "react-native";
-import { useState } from "react";
-import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInDown,
-} from "react-native-reanimated";
+import React, { useEffect, useMemo, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
+import { initializeApp } from "firebase/app";
+import {
+  addDoc,
+  deleteDoc,
+  doc,
+  getFirestore,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import { FIRESTORE_DB } from "@/FirebaseConfig";
+import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { BlurView } from "expo-blur";
-import { TouchableOpacity } from "@gorhom/bottom-sheet";
-import { defaultStyles } from "@/constants/Styles";
-import Colors from "@/constants/Colors";
-import { places } from "@/assets/data/places";
-import { useRouter } from "expo-router";
-// @ts-ignore
-import DatePicker from "react-native-modern-datepicker";
 
-import { addDoc, collection } from "firebase/firestore";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "@/FirebaseConfig";
-
-const AnimatedTouchableOpacity =
-  Animated.createAnimatedComponent(TouchableOpacity);
-
-const guestsGropus = [
-  {
-    name: "Adults",
-    text: "Ages 13 or above",
-    count: 0,
-  },
-  {
-    name: "Children",
-    text: "Ages 2-12",
-    count: 0,
-  },
-  {
-    name: "Infants",
-    text: "Under 2",
-    count: 0,
-  },
-  {
-    name: "Pets",
-    text: "Pets allowed",
-    count: 0,
-  },
-];
+// Define the interface for a Todo item
+export interface Todo {
+  title: string;
+  done: boolean;
+  id: string;
+}
+export interface Booking {
+  endDate: string;
+  startDate: string;
+  numPeople: string;
+  selectedPlace: string;
+  status: string;
+  id: string;
+}
 
 const Page = () => {
-  <Text>your booking</Text>
+  // State to hold the list of todos and the input value for new todos
+  const [todos, setTodos] = useState<any[]>();
+  const [todo, setTodo] = useState("");
+
+  useEffect(() => {
+    // Reference to the 'todos' collection in Firestore
+    const todoRef = collection(FIRESTORE_DB, "Booking");
+
+    // Subscribe to changes in the 'todos' collection
+    const subscriber = onSnapshot(todoRef, {
+      next: (snapshot) => {
+        console.log("UPDATED");
+        // Array to store fetched todos
+        const todos: Booking[] = [];
+        // Iterate over the documents in the snapshot
+        snapshot.docs.forEach((doc) => {
+          // Add each todo to the array
+          todos.push({
+            id: doc.id,
+            ...doc.data(),
+          } as Booking);
+          // Update the todos state with the fetched todos
+          setTodos(todos);
+        });
+      },
+      // Error handling for fetching snapshot
+      error: (error) => {
+        console.error("Error fetching snapshot:", error);
+      },
+    });
+
+    // Cleanup function to unsubscribe from snapshot listener when component unmounts
+    return () => subscriber();
+  }, []);
+
+  // Function to add a new todo to Firestore
+  // const addTodo = async () => {
+  //   console.log("ADD");
+  //   // Add a new todo document to the 'todos' collection
+  //   const doc = await addDoc(collection(FIRESTORE_DB, "todos"), {
+  //     title: todo,
+  //     done: false,
+  //   });
+  //   console.log("🚀 ~ file: List.tsx:12 ~ addTodo ~ doc:", doc);
+  //   // Clear the input field after adding todo
+  //   setTodo("");
+  // };
+
+  const renderTodo = ({ item }: any) => {
+    const ref = doc(FIRESTORE_DB, `Booking/${item.id}`);
+
+    const toggleDone = async () => {
+      updateDoc(ref, { done: !item.done });
+    };
+
+    const deleteItem = async () => {
+      deleteDoc(ref);
+    };
+
+    return (
+      <View style={styles.todoContainer}>
+        <TouchableOpacity onPress={toggleDone} style={styles.todo}>
+          <Text style={styles.todoText}>start date is {item.startDate}</Text>
+          <Text style={styles.todoText}>end date is {item.endDate}</Text>
+          <Text style={styles.todoText}>homestay is {item.selectedPlace}</Text>
+          <Text style={styles.todoText}>status is {item.status}</Text>
+          
+        </TouchableOpacity>
+        <Ionicons
+          name="trash-outline"
+          size={24}
+          color="black"
+          onPress={deleteItem}
+        />
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* showing list of todos */}
+      {(todos?.length as any) > 0 && (
+        <View>
+          <FlatList
+            data={todos}
+            renderItem={(item) => renderTodo(item)}
+            keyExtractor={(todo: Todo) => todo.id}
+          />
+        </View>
+      )}
+    </View>
+  );
 };
 
 export default Page;
 
 const styles = StyleSheet.create({
   container: {
+    marginHorizontal: 20,
+  },
+  form: {
+    marginVertical: 20,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  input: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 26,
-  },
-
-  seperatorView: {
-    flexDirection: "row",
-    gap: 10,
-    alignItems: "center",
-    marginVertical: 30,
-  },
-  seperator: {
-    fontFamily: "mon-sb",
-    color: Colors.grey,
-    fontSize: 16,
-  },
-  btnOutline: {
-    backgroundColor: "#fff",
+    height: 40,
     borderWidth: 1,
-    borderColor: Colors.grey,
-    height: 50,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    paddingHorizontal: 10,
-  },
-  btnOutlineText: {
-    color: "#000",
-    fontSize: 16,
-    fontFamily: "mon-sb",
-  },
-  btnText: {
-    // fontFamily: "mon-sb",
-    margin: 8,
-    alignItems: "center",
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 14,
-    margin: 10,
-    elevation: 4,
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    gap: 20,
-  },
-  cardHeader: {
-    fontFamily: "mon-b",
-    fontSize: 24,
-    padding: 20,
-  },
-  cardBody: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  cardPreview: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 20,
-  },
-
-  searchSection: {
-    height: 50,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderWidth: 1,
-    borderColor: "#ABABAB",
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  searchIcon: {
-    padding: 10,
-  },
-  inputField: {
-    flex: 1,
+    borderRadius: 4,
     padding: 10,
     backgroundColor: "#fff",
   },
-  placesContainer: {
+  todoContainer: {
     flexDirection: "row",
-    gap: 25,
-  },
-  place: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-  },
-  placeSelected: {
-    borderColor: Colors.grey,
-    borderWidth: 2,
-    borderRadius: 10,
-    width: 100,
-    height: 100,
-  },
-  previewText: {
-    fontFamily: "mon-sb",
-    fontSize: 14,
-    color: Colors.grey,
-  },
-  previewdData: {
-    fontFamily: "mon-sb",
-    fontSize: 14,
-    // color: Colors.dark,
-  },
-
-  guestItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 16,
+    backgroundColor: "#FFFF00",
+    padding: 10,
+    marginVertical: 4,
   },
-  itemBorder: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.grey,
+  todoText: {
+    flex: 1,
+    paddingHorizontal: 4,
+  },
+  todo: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
