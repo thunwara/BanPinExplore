@@ -6,6 +6,8 @@ import {
   Image,
   SafeAreaView,
   TextInput,
+  ActivityIndicator,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useState } from "react";
 import Animated, {
@@ -22,6 +24,9 @@ import { places } from "@/assets/data/places";
 import { useRouter } from "expo-router";
 // @ts-ignore
 import DatePicker from "react-native-modern-datepicker";
+
+import { addDoc, collection } from "firebase/firestore";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "@/FirebaseConfig";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -57,201 +62,86 @@ const Page = () => {
   const router = useRouter();
   const today = new Date().toISOString().substring(0, 10);
 
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [numPeople, setNumPeople] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const onClearAll = () => {
     setSelectedPlace(0);
     setOpenCard(0);
+    setStartDate('');
+    setEndDate('');
+    setNumPeople('');
+  };
+
+  const saveBooking = async () => {
+    setLoading(true);
+    try {
+      const currentUser = FIREBASE_AUTH.currentUser;
+      if (currentUser) {
+        // Create a new document in the "bookings" collection with the booking details
+        const bookingData = {
+          startDate: startDate,
+          endDate: endDate,
+          numPeople: numPeople,
+          selectedPlace: selectedPlace, // Assuming you have the place information stored somewhere
+          userID: currentUser.uid, // Add the userID field with the current user's UID
+        };
+        await addDoc(collection(FIRESTORE_DB, "Booking"), bookingData);
+        alert("Booking information is sent to the homestay owner");
+      } else {
+        throw new Error("User not authenticated");
+      }
+    } catch (error: any) {
+      console.log(error);
+      alert("Booking failed: " + error.message);
+    } finally {
+      setLoading(false);
+      router.navigate("/(tabs)/booking")
+    }
   };
 
   return (
     <BlurView intensity={70} style={styles.container} tint="light">
-      {/*  Where */}
-      <View style={styles.card}>
-        {openCard != 0 && (
-          <AnimatedTouchableOpacity
-            onPress={() => setOpenCard(0)}
-            style={styles.cardPreview}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(200)}
+      <View style={styles.container}>
+        <KeyboardAvoidingView behavior="padding">
+          <TextInput
+            autoCapitalize="none"
+            placeholder="Start Date"
+            style={[defaultStyles.inputField, { marginBottom: 30 }]}
+            placeholderTextColor="#ABABAB"
+            value={startDate}
+            onChangeText={(text) => setStartDate(text)}
+          ></TextInput>
+
+          <TextInput
+            autoCapitalize="none"
+            placeholder="End Date"
+            style={[defaultStyles.inputField, { marginBottom: 30 }]}
+            placeholderTextColor="#ABABAB"
+            value={endDate}
+            onChangeText={(text) => setEndDate(text)}
+          ></TextInput>
+
+          <TextInput
+            autoCapitalize="none"
+            placeholder="Number of People"
+            style={[defaultStyles.inputField, { marginBottom: 30 }]}
+            placeholderTextColor="#ABABAB"
+            value={numPeople}
+            onChangeText={(text) => setNumPeople(text)}
+          ></TextInput>
+
+          {loading && <ActivityIndicator size="large" color="#0000ff" />}
+
+          <TouchableOpacity
+            onPress={saveBooking}
+            style={[defaultStyles.btn, { marginBottom: 10 }]}
           >
-            <Text style={styles.previewText}>Where</Text>
-            <Text style={styles.previewdData}>I'm flexible</Text>
-          </AnimatedTouchableOpacity>
-        )}
-
-        {openCard == 0 && <Text style={styles.cardHeader}>Where to?</Text>}
-        {openCard == 0 && (
-          <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            style={styles.cardBody}
-          >
-            <View style={styles.searchSection}>
-              <Ionicons
-                style={styles.searchIcon}
-                name="search-outline"
-                size={20}
-                color="#000"
-              />
-              <TextInput
-                style={styles.inputField}
-                placeholder="Search destinations"
-                placeholderTextColor={Colors.grey}
-              />
-            </View>
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.placesContainer}
-            >
-              {places.map((item, index) => (
-                <TouchableOpacity
-                  onPress={() => setSelectedPlace(index)}
-                  key={index}
-                >
-                  <Image
-                    source={item.img}
-                    // style={selectedPlace == index ? styles.placeSelected : styles.place}
-                  />
-                  <Text style={{ fontFamily: "mon", paddingTop: 6 }}>
-                    {item.title}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </Animated.View>
-        )}
-      </View>
-
-      {/* When */}
-      <View style={styles.card}>
-        {openCard != 1 && (
-          <AnimatedTouchableOpacity
-            onPress={() => setOpenCard(1)}
-            style={styles.cardPreview}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(200)}
-          >
-            <Text style={styles.previewText}>When</Text>
-            <Text style={styles.previewdData}>Any week</Text>
-          </AnimatedTouchableOpacity>
-        )}
-
-        {openCard == 1 && (
-          <Text style={styles.cardHeader}>When's your trip?</Text>
-        )}
-
-        {openCard == 1 && (
-          <Animated.View style={styles.cardBody}>
-            <DatePicker
-              options={{
-                defaultFont: "mon",
-                headerFont: "mon-sb",
-                mainColor: Colors.primary,
-                borderColor: "transparent",
-              }}
-              current={today}
-              selected={today}
-              mode={"calendar"}
-            />
-          </Animated.View>
-        )}
-      </View>
-
-      {/* Guests */}
-      <View style={styles.card}>
-        {openCard != 2 && (
-          <AnimatedTouchableOpacity
-            onPress={() => setOpenCard(2)}
-            style={styles.cardPreview}
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(200)}
-          >
-            <Text style={styles.previewText}>Who</Text>
-            <Text style={styles.previewdData}>Add guests</Text>
-          </AnimatedTouchableOpacity>
-        )}
-
-        {openCard == 2 && <Text style={styles.cardHeader}>Who's coming?</Text>}
-
-        {openCard == 2 && (
-          <Animated.View style={styles.cardBody}>
-            {groups.map((item, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.guestItem,
-                  index + 1 < guestsGropus.length ? styles.itemBorder : null,
-                ]}
-              >
-                <View>
-                  <Text style={{ fontFamily: "mon-sb", fontSize: 14 }}>
-                    {item.name}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: "mon",
-                      fontSize: 14,
-                      color: Colors.grey,
-                    }}
-                  >
-                    {item.text}
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 10,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      const newGroups = [...groups];
-                      newGroups[index].count =
-                        newGroups[index].count > 0
-                          ? newGroups[index].count - 1
-                          : 0;
-
-                      setGroups(newGroups);
-                    }}
-                  >
-                    <Ionicons
-                      name="remove-circle-outline"
-                      size={26}
-                      color={groups[index].count > 0 ? Colors.grey : "#cdcdcd"}
-                    />
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      fontFamily: "mon",
-                      fontSize: 16,
-                      minWidth: 18,
-                      textAlign: "center",
-                    }}
-                  >
-                    {item.count}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      const newGroups = [...groups];
-                      newGroups[index].count++;
-                      setGroups(newGroups);
-                    }}
-                  >
-                    <Ionicons
-                      name="add-circle-outline"
-                      size={26}
-                      color={Colors.grey}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            ))}
-          </Animated.View>
-        )}
+            <Text style={defaultStyles.btnText}>Save booking</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
       </View>
 
       {/* Footer */}
@@ -283,7 +173,7 @@ const Page = () => {
 
           <TouchableOpacity
             style={[defaultStyles.btn, { paddingRight: 20, paddingLeft: 50 }]}
-            onPress={() => router.back()}
+            onPress={saveBooking}
           >
             <Ionicons
               name="search-outline"
@@ -291,7 +181,7 @@ const Page = () => {
               style={defaultStyles.btnIcon}
               color={"#fff"}
             />
-            <Text style={defaultStyles.btnText}>Search</Text>
+            <Text style={defaultStyles.btnText}>Save</Text>
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -303,6 +193,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 100,
+    backgroundColor: "#fff",
+    padding: 26,
   },
   card: {
     backgroundColor: "#fff",

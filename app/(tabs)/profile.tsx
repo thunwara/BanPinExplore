@@ -18,10 +18,10 @@ import Login from "../(modals)/login";
 import wishlists from "@/app/(tabs)/wishlists";
 import trips from "@/app/(tabs)/trips";
 import { User, onAuthStateChanged, signOut } from "firebase/auth";
-import { FIREBASE_AUTH } from "@/FirebaseConfig";
 import * as ImagePicker from "expo-image-picker";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "@/FirebaseConfig";
 
 const Stack = createNativeStackNavigator();
 
