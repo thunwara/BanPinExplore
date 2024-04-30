@@ -86,7 +86,7 @@ const Page = () => {
           <View style={styles.card}>
             <View style={{ flexDirection: "row", gap: 6 }}>
             </View>
-            <Text>hello user</Text>
+            <Text>hello</Text>
             <Text>email: {user.email}</Text>
             <Text>ID: {user?.uid}</Text>
           </View>

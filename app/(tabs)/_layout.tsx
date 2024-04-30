@@ -1,8 +1,8 @@
-import { Tabs } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Colors from '@/constants/Colors';
+import { Tabs } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
 
 const Layout = () => {
   return (
@@ -10,20 +10,23 @@ const Layout = () => {
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
         tabBarLabelStyle: {
-          fontFamily: 'mon-sb',
+          fontFamily: "mon-sb",
         },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          tabBarLabel: 'Explore',
-          tabBarIcon: ({ size, color }) => <Ionicons name="search" size={size} color={color} />,
+          tabBarLabel: "Explore",
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="search" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="wishlists"
         options={{
-          tabBarLabel: 'Wishlists',
+          tabBarLabel: "Wishlists",
           tabBarIcon: ({ size, color }) => (
             <Ionicons name="heart-outline" size={size} color={color} />
           ),
@@ -32,23 +35,38 @@ const Layout = () => {
       <Tabs.Screen
         name="trips"
         options={{
-          tabBarLabel: 'Trips',
-          tabBarIcon: ({ size, color }) => <FontAwesome5 name="airbnb" size={size} color={color} />,
+          tabBarLabel: "Trips",
+          tabBarIcon: ({ size, color }) => (
+            <FontAwesome5 name="airbnb" size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="booking"
         options={{
-          tabBarLabel: 'Booking',
+          tabBarLabel: "Booking",
           tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name="message-outline" size={size} color={color} />
+            <MaterialCommunityIcons
+              name="message-outline"
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="owner"
+        options={{
+          tabBarLabel: "Owner",
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="accessibility-outline" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarLabel: 'Profile',
+          tabBarLabel: "Profile",
 
           headerShown: false,
           tabBarIcon: ({ size, color }) => (

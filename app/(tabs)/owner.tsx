@@ -30,6 +30,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "@/FirebaseConfig";
 
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import DropdownStatus from "@/components/DropdownStatus";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -144,50 +145,45 @@ const Page = () => {
   };
 
   return (
-    <BlurView intensity={70} style={styles.container} tint="light">
       <View style={styles.container}>
         <KeyboardAvoidingView behavior="padding">
-          {/* Dropdown to select homestay */}
-          {/* <Dropdown
-            options={homestays}
-            onSelect={(selectedHomestay) => setSelectedHomestay(selectedHomestay)}
-          /> */}
-
           <TextInput
             autoCapitalize="none"
-            placeholder="Homestay"
+            placeholder="HomestayA"
             style={[defaultStyles.inputField, { marginBottom: 30 }]}
-            placeholderTextColor="#ABABAB"
+            placeholderTextColor="#000"
             value={selectedHomestay}
             onChangeText={(text) => setSelectedHomestay(text)}
           ></TextInput>
 
           <TextInput
             autoCapitalize="none"
-            placeholder="Start Date"
+            placeholder="5 May 2024"
             style={[defaultStyles.inputField, { marginBottom: 30 }]}
-            placeholderTextColor="#ABABAB"
+            placeholderTextColor="#000"
             value={startDate}
             onChangeText={(text) => setStartDate(text)}
           ></TextInput>
 
           <TextInput
             autoCapitalize="none"
-            placeholder="End Date"
+            placeholder="7 May 2024"
             style={[defaultStyles.inputField, { marginBottom: 30 }]}
-            placeholderTextColor="#ABABAB"
+            placeholderTextColor="#000"
             value={endDate}
             onChangeText={(text) => setEndDate(text)}
           ></TextInput>
 
           <TextInput
             autoCapitalize="none"
-            placeholder="Number of People"
+            placeholder="QUnzU6GpFloUs7SKdLnZ"
             style={[defaultStyles.inputField, { marginBottom: 30 }]}
-            placeholderTextColor="#ABABAB"
+            placeholderTextColor="#000"
             value={numPeople}
             onChangeText={(text) => setNumPeople(text)}
           ></TextInput>
+
+          <DropdownStatus/>
 
           {loading && <ActivityIndicator size="large" color="#0000ff" />}
 
@@ -195,53 +191,10 @@ const Page = () => {
             onPress={saveBooking}
             style={[defaultStyles.btn, { marginBottom: 10 }]}
           >
-            <Text style={defaultStyles.btnText}>Save booking</Text>
+            <Text style={defaultStyles.btnText}>Save status</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </View>
-
-      {/* Footer */}
-      <Animated.View
-        style={defaultStyles.footer}
-        entering={SlideInDown.delay(200)}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            style={{ height: "100%", justifyContent: "center" }}
-            onPress={onClearAll}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: "mon-sb",
-                textDecorationLine: "underline",
-              }}
-            >
-              Clear all
-            </Text>
-          </TouchableOpacity>
-
-          {/* <TouchableOpacity
-            style={[defaultStyles.btn, { paddingRight: 20, paddingLeft: 50 }]}
-            onPress={saveBooking}
-          >
-            <Ionicons
-              name="search-outline"
-              size={24}
-              style={defaultStyles.btnIcon}
-              color={"#fff"}
-            />
-            <Text style={defaultStyles.btnText}>Save</Text>
-          </TouchableOpacity> */}
-        </View>
-      </Animated.View>
-    </BlurView>
   );
 };
 

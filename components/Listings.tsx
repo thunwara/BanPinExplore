@@ -30,7 +30,7 @@ const Listings = ({ listings: items, refresh, category }: Props) => {
     if (refresh) {
       scrollListTop();
     }
-    console.log("REFRESH LISTING")
+    console.log("REFRESH LISTING");
   }, [refresh]);
 
   const scrollListTop = () => {
@@ -56,7 +56,10 @@ const Listings = ({ listings: items, refresh, category }: Props) => {
           exiting={FadeOutLeft}
         >
           <Animated.Image
-            source={{ uri: item.medium_url }}
+            source={{
+              uri: "https://paikondieow.com/wp-content/uploads/2019/01/a-34.jpg",
+              // uri: item.medium_url
+            }}
             style={styles.image}
           />
           <TouchableOpacity
@@ -79,7 +82,7 @@ const Listings = ({ listings: items, refresh, category }: Props) => {
           </View>
           <Text style={{ fontFamily: "mon" }}>{item.room_type}</Text>
           <View style={{ flexDirection: "row", gap: 4 }}>
-            <Text style={{ fontFamily: "mon-sb" }}>€ {item.price}</Text>
+            <Text style={{ fontFamily: "mon-sb" }}>{item.price} baht</Text>
             <Text style={{ fontFamily: "mon" }}>night</Text>
           </View>
         </Animated.View>

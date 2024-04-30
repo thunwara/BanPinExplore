@@ -1,15 +1,24 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import React, { memo, useEffect, useRef } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { defaultStyles } from "@/constants/Styles";
 import { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import MapView from "react-native-map-clustering";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
+import { collection, getDocs } from "firebase/firestore";
 import * as Location from "expo-location";
+import { FIRESTORE_DB } from "@/FirebaseConfig";
 
 interface Props {
   listings: any;
+}
+
+export interface Homestay {
+  District: string;
+  HomestayName: string;
+  HomestayOwner: string;
+  id: string;
 }
 
 const INITIAL_REGION = {
@@ -22,6 +31,35 @@ const INITIAL_REGION = {
 const ListingsMap = memo(({ listings }: Props) => {
   const router = useRouter();
   const mapRef = useRef<any>(null);
+
+  const [homestays, setHomestays] = useState<Homestay[]>([]);
+
+  useEffect(() => {
+    const fetchHomestays = async () => {
+      try {
+        const homestaySnapshot = await getDocs(
+          collection(FIRESTORE_DB, "Homestay")
+        );
+        const homestayData = homestaySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        // setHomestays(homestayData);
+      } catch (error) {
+        console.error("Error fetching homestays:", error);
+      } finally {
+        // console.log("Homestay data fetched:", homestays);
+      }
+    };
+    fetchHomestays();
+  }, []);
+
+  useEffect(() => {
+    // Check if homestay data has been fetched
+    if (homestays.length > 0) {
+      console.log("Homestay data fetched:", homestays);
+    }
+  }, [homestays]);
 
   // When the component mounts, locate the user
   useEffect(() => {
@@ -108,7 +146,7 @@ const ListingsMap = memo(({ listings }: Props) => {
             onPress={() => onMarkerSelected(item)}
           >
             <View style={styles.marker}>
-              <Text style={styles.markerText}>€ {item.properties.price}</Text>
+              <Text style={styles.markerText}>{item.properties.price} baht</Text>
             </View>
           </Marker>
         ))}
